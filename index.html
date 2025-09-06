@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Searchable Medication List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .table-container {
+            max-height: 70vh; /* Adjust height as needed */
+            overflow-y: auto;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Unregistered Medications</h1>
+            <p class="text-gray-600 mb-6">Use the fields below to search and filter the medication data.</p>
+            
+            <!-- Search and Filter Inputs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label for="nameSearch" class="block text-sm font-medium text-gray-700">Active Ingredient Name</label>
+                    <input type="text" id="nameSearch" onkeyup="filterTable()" placeholder="Search by name..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                </div>
+                <div>
+                    <label for="strengthSearch" class="block text-sm font-medium text-gray-700">Strength</label>
+                    <input type="text" id="strengthSearch" onkeyup="filterTable()" placeholder="Search by strength..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                </div>
+                <div>
+                    <label for="dosageSearch" class="block text-sm font-medium text-gray-700">Dosage Form</label>
+                    <input type="text" id="dosageSearch" onkeyup="filterTable()" placeholder="Search by dosage form..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                </div>
+                <div>
+                    <label for="reasonFilter" class="block text-sm font-medium text-gray-700">Reason</label>
+                    <select id="reasonFilter" onchange="filterTable()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
+                        <option value="">All</option>
+                        <option value="To be registered">To be registered</option>
+                        <option value="Additional alternative required">Additional alternative required</option>
+                        <option value="N/A">N/A (Blank)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="table-container">
+                <table class="min-w-full divide-y divide-gray-200" id="medicationTable">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Active Ingredient Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Strength</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dosage Form</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Data from your file will be dynamically displayed here. I've included it directly in the HTML for this example. -->
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ACETAMINOPHEN + CODEINE</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">120 MG + 12 MG / 5ML, 473ML</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">ELIXIR</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ACYCLOVIR (ACICLOVIR)</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3% (30 MG/G)</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">EYE OINTMENT</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AMILORIDE</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5MG</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">TABLET</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AMINO ACIDS,CARBOHYDRATE,FAT</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AMINO ACIDS,ELECTROLYTES</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AMITRIPTYLINE HYDROCHLORIDE</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">25 MG/5 ML (150ML)</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">ORAL SOLUTION</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ANAGRELIDE HYDROCHLORIDE</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">500 MCG</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">CAPSULE</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ANTHRAX IMMUNE GLOBULIN</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">60 IU 50ML VIAL</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">INJECTION</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ANTHRAX VACCINE</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ARTESUNATE</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">60 MG</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">POWDER FOR INJECTION</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ASCORBIC ACID (VITAMIN C)</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">500MG</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">INJECTION</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">BENZYLPENICILLIN</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1000000 IU (600MG)</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">POWDER FOR INJECTION</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">To be registered</td>
+                        </tr>
+                        <!-- ... More rows would continue here ... -->
+                        <!-- A full copy of the provided table data is included in the script below to keep this section clean. -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <footer class="text-center text-sm text-gray-500 mt-8">
+            <p>Data is dynamically filtered using JavaScript.</p>
+        </footer>
+    </div>
+
+    <script>
+        const data = [
+            ["ACETAMINOPHEN + CODEINE", "120 MG + 12 MG / 5ML, 473ML", "ELIXIR", "To be registered"],
+            ["ACYCLOVIR (ACICLOVIR)", "3% (30 MG/G)", "EYE OINTMENT", "To be registered"],
+            ["AMILORIDE", "5MG", "TABLET", "To be registered"],
+            ["AMINO ACIDS,CARBOHYDRATE,FAT", " ", " ", "To be registered"],
+            ["AMINO ACIDS,ELECTROLYTES", " ", " ", "To be registered"],
+            ["AMITRIPTYLINE HYDROCHLORIDE", "25 MG/5 ML (150ML)", "ORAL SOLUTION", "To be registered"],
+            ["ANAGRELIDE HYDROCHLORIDE", "500 MCG", "CAPSULE", "To be registered"],
+            ["ANTHRAX IMMUNE GLOBULIN", "60 IU 50ML VIAL", "INJECTION", "To be registered"],
+            ["ANTHRAX VACCINE", " ", " ", "To be registered"],
+            ["ARTESUNATE", "60 MG", "POWDER FOR INJECTION", "To be registered"],
+            ["ASCORBIC ACID (VITAMIN C)", "500MG", "INJECTION", "To be registered"],
+            ["BENZYLPENICILLIN", "1000000 IU (600MG)", "POWDER FOR INJECTION", "To be registered"],
+            ["BROMAZEPAM", "1.5MG", "TABLET", "To be registered"],
+            ["BUMETANIDE", "1 MG", "TABLET", "To be registered"],
+            ["BUSERELIN ACETATE", "1 MG/ML", "INJECTION", "To be registered"],
+            ["CALCITRIOL", "0.5 MCG", "CAPSULE", "To be registered"],
+            ["CALCIUM EDETATE DISODIUM", "50MG/ML (10ML)", "SOLUTION FOR INJECTION", "To be registered"],
+            ["CALCIUM FOLINATE (FOLINIC ACID)", "15 MG", "TABLET", "To be registered"],
+            ["CARDIOPLEGIC SOLUTION", "1000ML BOTTLE OR BAG", "SOLUTION", "To be registered"],
+            ["CENTRAL THREE CHAMBER PARENTERAL NUTRITION 1500 ML BAG WITH ELECTROLYTES, IV LIPIDS OLIVE OIL AND SOYBEAN OIL", " ", " ", "To be registered"],
+            ["CENTRAL THREE CHAMBER PARENTERAL NUTRITION 1970 ML BAG WITH ELECTROLYTES, IV LIPIDS FISH BASED WITH MEDIUM CHAIN TRIGLYCERIDE AND OLIVE OIL, SOYBEAN OIL", " ", " ", "To be registered"],
+            ["CENTRAL THREE CHAMBER PARENTERAL NUTRITION 2463 ML BAG WITH ELECTROLYTES, IV LIPIDS FISH BASED WITH MEDIUM CHAIN TRIGLYCERIDE AND OLIVE OIL, SOYBEAN OIL", " ", " ", "To be registered"],
+            ["CENTRAL THREE CHAMBER PARENTERAL NUTRITION 986 ML BAG WITH ELECTROLYTES, IV LIPIDS FISH BASED WITH MEDIUM CHAIN TRIGLYCERIDE AND OLIVE OIL, SOYBEAN OIL", " ", " ", "To be registered"],
+            ["CHLOROTHIAZIDE", "500MG", "POWDER FOR INJECTION", "To be registered"],
+            ["CLONIDINE", "0.10 MG", "TABLET", "To be registered"],
+            ["CLONIDINE", "0.15 MG", "TABLET", "To be registered"],
+            ["CLOXACILLIN", "250 MG", "CAPSULE", "To be registered"],
+            ["CLOXACILLIN", "500 MG", "CAPSULE", "To be registered"],
+            ["COBICISTAT + ELVITEGRAVIR  + EMTRICITABINE  + TENOFOVIR DISOPROXIL", "150MG + 150MG + 200MG + 245MG", "TABLET", "To be registered"],
+            ["COBIMETINIB", "20 MG", "TABLET", "To be registered"],
+            ["CONJUGATED ESTROGENS", "1.25 MG", "TABLET", "To be registered"],
+            ["CONJUGATED ESTROGENS", "0.3 mg", "TABLET", "To be registered"],
+            ["COPPER", "0.4 MG/ML (10 ML) VIAL", "INJECTION", "To be registered"],
+            ["COSYNTROPIN (TETRACOSACTRIN)", "0.25 MG/ML (1 ML) VIAL", "INJECTION", "To be registered"],
+            ["DANTROLENE SODIUM", "250 MG", "INJECTION", "To be registered"],
+            ["DEXAMETHASONE", "500 MCG", "TABLET", "To be registered"],
+            ["DEXAMETHASONE", "1.5 MG", "TABLET", "To be registered"],
+            ["DEXRAZOXANE", "500 MG", "INJECTION", "To be registered"],
+            ["DEXTROSE 5 % IN 100 ML MINIBAG PLUS", " ", " ", "To be registered"],
+            ["DEXTROSE 5 % IN 50 ML MINIBAG PLUS", " ", " ", "To be registered"],
+            ["DEXTROSE 5% PIGGY BAG 25ML", " ", " ", "To be registered"],
+            ["DEXTROSE 5% WITH SODIUM CHLORIDE 0.45% WITH POTASSIUM CHLORIDE 20 MEQ INTRAVENOUS SOLUTION 1000 ML BAG", " ", " ", "To be registered"],
+            ["DIAZOXIDE", "50 MG/ML", "ORAL LIQUID", "To be registered"],
+            ["DIGOXIN-SPECIFIC ANTIBODY FRAGMENT F(AB)", "40 MG", "POWDER FOR INJECTION", "To be registered"],
+            ["DIMERCAPROL", " ", " ", "To be registered"],
+            ["DINUTUXIMAB BETA", "4.44 MG/ML", "SOLUTION FOR INJECTION PARENTERAL", "To be registered"],
+            ["DIPHENHYDRAMINE HCL", "50 MG/ML", "INJECTION", "To be registered"],
+            ["DIPHENHYDRAMINE HCL", "25 MG", "TABLET", "To be registered"],
+            ["DIPHENHYDRAMINE HYDROCHLORIDE", "50 MG", "CAPSULE", "To be registered"],
+            ["DIPHTHERIA ANTITOXIN", "100000 IU", "INJECTION", "To be registered"],
+            ["DIPHTHERIA; TETANUS VACCINE FOR ADULTS ; EACH 0.5 ML DOSE WITH NOT LESS THAN 40 IU TO 60 IU OF TETANUS TOXOID", " ", " ", "To be registered"],
+            ["DOBUTAMINE + DEXTROSE", "500MG/250ML + 5%", "INJECTION", "To be registered"],
+            ["DOCUSATE SODIUM", "100 MG", "TABLET", "To be registered"],
+            ["DORNASE ALPHA", "2.5 MG/2.5 ML", "SOLUTION FOR NEBULIZER", "To be registered"],
+            ["DOXAPRAM HCL", " ", " ", "To be registered"],
+            ["DOXYCYCLINE", "50 MG/5 ML", "SYRUP ORAL", "To be registered"],
+            ["DOXYCYCLINE MONOHYDRATE", "40 MG", "MODIFIED RELEASE CAPSULE", "To be registered"],
+            ["ELAPEGADEMASE", "2.4 MG/1.5 ML (1.6 MG/ML)", "SOLUTION FOR INJECTION", "To be registered"],
+            ["EMTRICITABINE", "10 MG/ML", "ORAL LIQUID", "To be registered"],
+            ["ENOXAPARIN", "30 MG/0.3 ML", "SOLUTION FOR INJECTION IN PRE-FILLED SYRINGE", "To be registered"],
+            ["EPOPROSTENOL", "500 MCG", "INJECTION", "To be registered"],
+            ["ERGOCALCIFEROL (VITAMIN D2) 50,000 IU CAPSULE", "50,000 IU", "CAPSULE", "To be registered"],
+            ["ERYTHROMYCIN", "5% (5MG/G)", "EYE OINTMENT", "To be registered"],
+            ["ESLICARBAZEPINE ACETATE", "800 MG", "TABLET", "To be registered"],
+            ["ESTERIFIED ESTROGEN", "300 MCG", "TABLET", "To be registered"],
+            ["ETHANOL 100%", " ", " ", "To be registered"],
+            ["ETHANOLAMINE OLEATE", "5% (2 ML)", "SOLUTION FOR INJECTION", "To be registered"],
+            ["ETHOSUXIMIDE", "250 MG", "CAPSULE", "To be registered"],
+            ["ETHYL ALCOHOL ABSOLUTE", " ", "INJECTION", "To be registered"],
+            ["ETOMIDATE", "2MG/ML", "INJECTION", "To be registered"],
+            ["FERRIC HYDROXIDE (ELEMENTAL IRON)", "50MG/5ML", "Bottle", "To be registered"],
+            ["FERROUS SULFATE", "325MG", "TABLET", "To be registered"],
+            ["FLECAINIDE ACETATE", "50 MG", "TABLET", "To be registered"],
+            ["FLUNARIZINE", "5 MG", "CAPSULE", "To be registered"],
+            ["FOLIC ACID", "25 MG/5 ML (5 ML) AMPOULE", "INJECTION", "To be registered"],
+            ["FOLIC ACID", "5 MG/ML (1ML) VIAL", "INJECTION", "To be registered"],
+            ["FORMOTEROL", " ", " ", "To be registered"],
+            ["GLYCERIN", "BOTTLE 500 ML", "ORAL SOLUTION", "To be registered"],
+            ["GLYCERYL TRINITRATE", "500 MCG", "SUBLINGUAL TABLET", "To be registered"],
+            ["GLYCERYL TRINITRATE", "(2%) 20 MG/G (1 G)", "OINTMENT", "To be registered"],
+            ["GLYCOPYRROLATE", "1 MG", "TABLET", "To be registered"],
+            ["GONADORELIN", "100 MCG", "POWDER FOR INJECTION", "To be registered"],
+            ["HAEMOPHILUS INFLUENZA B", "10 MCG/0.5 ML", "INJECTION", "To be registered"],
+            ["HALOPERIDOL", "1.5 MG", "TABLET", "To be registered"],
+            ["HALOPERIDOL", "10 MG", "TABLET", "To be registered"],
+            ["HEPTAVALENT BOTULINUM ANTITOXIN", "20 ML", "INJECTION", "To be registered"],
+            ["HEPTAVALENT BOTULINUM ANTITOXIN", "50 ML", "INJECTION", "To be registered"],
+            ["HYDROMORPHONE", "8 MG", "IMMEDIATE RELEASE TABLET", "To be registered"],
+            ["IMIPRAMINE HYDROCHLORIDE", "10 MG", "TABLET", "To be registered"],
+            ["IMMUNOGLOBULIN SMALLPOX", "50000 IU 15 ML", "FOR INJECTION PARENTERAL", "To be registered"],
+            ["INACTIVATED POLIO VACCINE (IPV) 0.5 ML INJECTION", " ", " ", "To be registered"],
+            ["INDOMETHACIN", "1 MG", "POWDER FOR INJECTION", "To be registered"],
+            ["INDOMETHACIN", "75 MG", "RETARD CAPSULE", "To be registered"],
+            ["KETOCONAZOLE", "200 MG", "TABLET", "To be registered"],
+            ["L-ARGININE HYDROCHLORIDE", "5 G/10 ML", "STERILE SOLUTION FOR IV INJECTION", "To be registered"],
+            ["L-CARNITINE", " ", " ", "To be registered"],
+            ["LEUCINE", "100 MG", "SACHET", "To be registered"],
+            ["LEVOMEPROMAZINE", "25MG/ML (1 ML)", "SOLUTION FOR INJECTION", "To be registered"],
+            ["LIDOCAINE + EPINEPHRINE", "1.5% + 1:200000 (5 ML)", "SOLUTION FOR INJECTION", "To be registered"],
+            ["LIDOCAINE HYDROCHLORIDE ANHYDROUS + EPINEPHRINE", "1% + 1 IN 100,000 (20 ML)", "INJECTION", "To be registered"],
+            ["LIOTHYRONINE SODIUM", "25 MCG", "TABLET", "To be registered"],
+            ["L-METHIONINE", "100 G", "CRYSTAL POWDER", "To be registered"],
+            ["LOMUSTINE", "10 MG", "CAPSULE", "To be registered"],
+            ["LOMUSTINE", "100 MG", "CAPSULE", "To be registered"],
+            ["LOMUSTINE", "40 MG", "CAPSULE", "To be registered"],
+            ["LOPERAMIDE", "1 MG/5 ML (100 ML)", "ORAL SOLUTION", "To be registered"],
+            ["LORAZEPAM", " ", " ", "To be registered"],
+            ["MAGNESIUM OXIDE", "663 MG (EQUIVALENT TO 400 MG (16.5 MMOL) MAGNESIUM)", "CAPSULE", "To be registered"],
+            ["MEASLES VACCINE 0.5 ML A FREEZE DRIED LIVE ATTENUATED SINGLE DOSE", " ", " ", "To be registered"],
+            ["MEDROXYPROGESTERONE ACETATE", "2.5 MG", "TABLET", "To be registered"],
+            ["MEGESTROL ACETATE", "160MG", "TABLET", "To be registered"],
+            ["MEGESTROL ACETATE", "40MG", "ORAL SCORED TABLET", "To be registered"],
+            ["METHACHOLINE", "100 MG", "POWDER FOR INHALATION", "To be registered"],
+            ["METHYLERGOMETRINE MALEATE", "0.125 MG", "TABLET", "To be registered"],
+            ["METOLAZONE", "2.5 MG", "TABLET", "To be registered"],
+            ["METOPROLOL TARTRATE", "5 MG/5 ML", "INJECTION", "To be registered"],
+            ["METYRAPONE", "250 MG", "TABLET", "To be registered"],
+            ["METYRAPONE", "250 MG", "CAPSULE", "To be registered"],
+            ["MINOCYCLINE", "100 MG", "CAPSULE", "To be registered"],
+            ["MINOXIDIL", "2.5 MG", "TABLET", "To be registered"],
+            ["MODAFINIL", "200 MG", "TABLET", "To be registered"],
+            ["MONOBENZONE", "1000 G", "POWDER", "To be registered"],
+            ["MORPHINE", "20 MG/ML (120 ML) BOTTLE", "ORAL CONCENTRATED SOLUTION", "To be registered"],
+            ["MORPHINE PRESERVATIVE FREE", "1 MG/ML (5-10 ML)", "AMPOULE", "To be registered"],
+            ["MULTIVITAMIN + ZINC", " ", "ORAL CHEWABLE TABLET", "To be registered"],
+            ["MULTIVITAMIN FOR RENAL DIALYSIS", " ", "ORAL TABLET", "To be registered"],
+            ["MULTIVITAMIN INJECTION FOR PEDIATRICS WITHOUT VITAMIN K 10ML", " ", " ", "To be registered"],
+            ["MULTIVITAMIN WITH ZINC LIQUID, ORAL DROPS. CONTENT PER 1 ML:5751 IU VITAMIN A, 400 IU VITAMIN D, 50 IU VITAMIN E, 45 MG VITAMIN C, 0 .6 MG VITAMIN B1, 0.6 MG VITAMIN B2, 6 MG NIACINAMIDE, 0.6 MG VITAMIN B6, 15 MCG BIOTIN, 3 MG PANTOTHENIC ACID, 5", " ", "ORAL DROPS", "To be registered"],
+            ["MULTIVITAMINS FOR MEN + L-CARNITINE", " ", " ", "To be registered"],
+            ["MULTIVITAMINS FOR PEDIATRIC (A, B1, B2, B3, B5, B6, B7, B12, C, D3, E, K1, FOLIC ACID) INJECTION: CONCENTRATED, 4 ML & 1 ML VIAL FOR TPN", " ", " ", "To be registered"],
+            ["MULTIVITAMINS WITH VITAMIN A, D, E, K IN WATER SOLUBLE FORM FOR PEDIATRIC", " ", " ", "To be registered"],
+            ["MYCOPHENOLATE", "500MG", "INJECTION", "To be registered"],
+            ["NEOMYCIN 3.5 MG + POLYMYXIN B 5000 U + BACITRACIN ZINC 400 U PER G OINTMENT 0.9 G", " ", " ", "To be registered"],
+            ["NEOMYCIN 3.5 MG + POLYMYXIN B 5000 U + BACITRACIN ZINC 400 U PER G OINTMENT 20 - 30 G", " ", " ", "To be registered"],
+            ["NICARDIPINE", "10 MG/10 ML", "PREMIXED INJECTION", "To be registered"],
+            ["NICARDIPINE", "20 MG IN SODIUM CHLORIDE 0.9% (200 ML)", "INJECTION", "To be registered"],
+            ["NITROGLYCERIN IN DEXTROSE", "200 MCG/ML , 5%", "INFUSION", "To be registered"],
+            ["OXYCODONE HCL", "10 MG/ML", "INJECTION", "To be registered"],
+            ["OXYTOCIN + ERGOMETRINE", "5 IU/ML + 500 MCG/ML", "INJECTION AMPOULE OR VIAL", "To be registered"],
+            ["PAMIDRONATE", "3MG/ML", "INJECTION", "To be registered"],
+            ["PEGVALIASE", "10MG/0.5ML", "SOLUTION PREFILLED SYRINGE", "To be registered"],
+            ["PENICILLIN G PROCAIN,PENICILLIN G SODIUM", " ", " ", "To be registered"],
+            ["PERAMPANEL", "0.5 MG/ML", "SUSPENSION", "To be registered"],
+            ["PERIPHERAL THREE CHAMBER PARENTERAL NUTRITION 1000 ML BAG WITH ELECTROLYTES, IV LIPIDS OLIVE OIL AND SOYBEAN OIL", " ", " ", "To be registered"],
+            ["PERIPHERAL THREE CHAMBER PARENTERAL NUTRITION 1250 ML BAG WITH ELECTROLYTES, IV LIPIDS FISH BASED WITH MEDIUM CHAIN TRIGLYCERIDE AND, SOYBEAN OIL", " ", " ", "To be registered"],
+            ["PERIPHERAL THREE CHAMBER PARENTERAL NUTRITION 1875 ML BAG WITH ELECTROLYTES, IV LIPIDS FISH BASED WITH MEDIUM CHAIN TRIGLYCERIDE AND, SOYBEAN OIL", " ", " ", "To be registered"],
+            ["PERIPHERAL THREE CHAMBER PARENTERAL NUTRITION 2500 ML BAG WITH ELECTROLYTES, IV LIPIDS FISH BASED WITH MEDIUM CHAIN TRIGLYCERIDE AND, SOYBEAN OIL", " ", " ", "To be registered"],
+            ["PHENAZOPYRIDINE", "100MG", "TABLET", "To be registered"],
+            ["PHENOBARBITONE", " ", " ", "To be registered"],
+            ["PHENOXYBENZAMINE", "10MG", "CAPSULE", "To be registered"],
+            ["PHENOXYMETHYLPENICILLIN", "250 MG/5 ML", "ORAL LIQUID", "To be registered"],
+            ["PHENOXYMETHYLPENICILLIN (PENICILLIN V)", "125 MG/5 ML (100 ML)", "POWDER FOR ORAL SOLUTION", "To be registered"],
+            ["PHENYTOIN", "50MG", "CAPSULE", "To be registered"],
+            ["PHOSPHATE", "500 MG", "EFFERVESCENT TABLET", "To be registered"],
+            ["PHOSPHOLIPIDS,SURFACTANT ASSOCIATED PROTEINS B AND C", " ", " ", "To be registered"],
+            ["PHYTOMENADIONE", "10 MG", "CAPSULE", "To be registered"],
+            ["PIMOZIDE", "1 MG", "TABLET", "To be registered"],
+            ["PLASMA EXPANDER MODIFIED GELATIN INFUSION BAG 500 ML", " ", " ", "To be registered"],
+            ["POLIDOCANOL", "0.01", "INJECTION", "To be registered"],
+            ["POLIDOCANOL", "0.5% (2 ML)", "SOLUTION FOR INJECTION", "To be registered"],
+            ["POLIOMYLITIS VACCINE ORAL BIVALENT TYPES 1 AND 3 (20 DOSES) BIVALENT ORAL POLIO VACCINE (B OPV) CONSISTS OF LIVE ATTENUATED", " ", " ", "To be registered"],
+            ["POTASSIUM CHLORIDE 40 MMOL; SODIUM CHLORIDE 0.9% 1000 ML BAG", " ", " ", "To be registered"],
+            ["POTASSIUM CITRATE MONOHYDRATE + CITRIC ACID MONOHYDRATE", "1100 MG, 334 MG", "ORAL SOLUTION", "To be registered"],
+            ["POTASSIUM PHOSPHATE", "3MMOL/ML", "INJECTION", "To be registered"],
+            ["PRALIDOXIME/ATROPINE AUTOINJECTOR", " ", " ", "To be registered"],
+            ["PRAZOSIN", "1 MG", "TABLET", "To be registered"],
+            ["PREDNISONE", "50 MG", "TABLET", "To be registered"],
+            ["PROPRANOLOL", "40 MG/5 ML", "ORAL SOLUTION", "To be registered"],
+            ["PROPYLENE GLYCOL LIQUID 99.7% USP", " ", " ", "To be registered"],
+            ["PRUSSIAN BLUE", " ", " ", "To be registered"],
+            ["PSEUDOEPHEDRINE HYDROCHLORIDE", "30 MG", "TABLET", "To be registered"],
+            ["PYRIDOSTIGMINE", "60 MG/5 ML", "SYRUP", "To be registered"],
+            ["PYRIDOXINE HYDROCHLORIDE (VITAMIN B6) 25MG", " ", "TABLET", "To be registered"],
+            ["PYRIDOXINE HYDROCHLORIDE (VITAMIN B6) 50MG", " ", "TABLET", "To be registered"],
+            ["QUINIDINE SULFATE", "300 MG", "TABLET", "To be registered"],
+            ["QUININE SULFATE", "300MG", "TABLET", "To be registered"],
+            ["RABIES IMMUNOGLOBULIN OF HUMAN ORIGIN", "100-150 IU/1 ML", "INJECTION", "To be registered"],
+            ["REGADENOSON", "0.4MG", "INJECTION", "To be registered"],
+            ["RIFAPENTINE", "150MG", "TABLET", "To be registered"],
+            ["RILUZOLE", "50 MG", "TABLET", "To be registered"],
+            ["SALMETEROL", " ", " ", "To be registered"],
+            ["SELENIUM", "10 TO 50MCG/ML", "INJECTION", "To be registered"],
+            ["SMALLPOX VACCINE", " ", " ", "To be registered"],
+            ["SODIUM BICARBONATE", "4.2% [0.5MMOL/1ML] 10 ML", "SYRINGE", "To be registered"],
+            ["SODIUM CHLORIDE", "7%", "SOLUTION FOR INHALATION", "To be registered"],
+            ["SODIUM NITRITE 300 MG/10 ML AND SODIUM THIOSULFATE 12.5 MG/50 ML", " ", "SOLUTION FOR INJECTION", "To be registered"],
+            ["SODIUM PHENYLBUTYRATE", "500MG", "TABLET", "To be registered"],
+            ["SOTALOL HYDROCHLORIDE", "160 MG", "TABLET", "To be registered"],
+            ["STERILE WATER FOR INJECTION 2000 ML BAG", " ", " ", "To be registered"],
+            ["STIRIPENTOL", "250MG", "SACHET", "To be registered"],
+            ["STREPTOMYCIN", " ", " ", "To be registered"],
+            ["STREPTOMYCIN", "1G", "POWDER FOR INJECTION", "To be registered"],
+            ["SUCCIMER (DIMERCAPTOSUCCINIC ACID, DSMA)", "100 MG", "CAPSULE", "To be registered"],
+            ["SUCRALFATE", "1 G/10 ML (420ML)", "ORAL SUSPENSION", "To be registered"],
+            ["SUCRALFATE", "1GM", "TABLET", "To be registered"],
+            ["SUFENTANIL FORTE", "250 MCG/5 ML", "INJECTION", "To be registered"],
+            ["TACROLIMUS", "0.75 MG", "PROLONGED RELEASE TABLET", "To be registered"],
+            ["TACROLIMUS", "5MG/ML", "INJECTION", "To be registered"],
+            ["TERAZOSIN", "2 MG", "TABLET", "To be registered"],
+            ["TERAZOSIN", "5 MG", "TABLET", "To be registered"],
+            ["TESTOSTERONE", "50 MG/5 G (5 GM)", "TOPICAL GEL", "To be registered"],
+            ["TETANUS ANTITOXIN AMPOULE 1500 IU", " ", " ", "To be registered"],
+            ["TETANUS IMMUNOGLOBULIN", "250 IU", "INJECTION", "To be registered"],
+            ["THIOPENTAL SODIUM", "500 MG", "INJECTION", "To be registered"],
+            ["TIOPRONIN", "100 MG", "TABLET", "To be registered"],
+            ["TRACE ELEMENTS", " ", " ", "To be registered"],
+            ["TRETINOIN", "10 MG", "CAPSULE", "To be registered"],
+            ["TRIAMCINOLONE HEXACETONIDE", "20 MG/ML", "INTRA-ARTICULAR INJECTION", "To be registered"],
+            ["TRICHLORO ACETIC ACID POWDER", " ", " ", "To be registered"],
+            ["TRIHEXYPHENIDYL (BENZHEXOL) HYDROCHLORIDE", " ", " ", "To be registered"],
+            ["TRIMETHOPRIM", "100 MG", "TABLET", "To be registered"],
+            ["TUBERCULIN (PPD SKIN TEST)", "1 TU - 5 TU /0.1 ML", "INJECTION", "To be registered"],
+            ["URIDINE MONOPHOSPHATE", "250 MG", "CAPSULE", "To be registered"],
+            ["VACCINE: DIPHETHERIA ,TETANUS, PERTUSSIS VACCINE (DTWP) EACH 0.5 ML. DOSE CONTAINS: NOT LESS THAN 40 - 60 I.U. OF TETANUS TOXOID, NO T LESS THAN 25 LF (30 IU.) OF DIPHTHERIA TOXOID ADSORBED", " ", " ", "To be registered"],
+            ["VACCINE: DIPHTHERIA, TETANUS ,ACELLULAR PERTUSSIS (TDAP), ADOLESCENT AND ADULT SINGLE DOSE 0.5ML PREFILLED SYRINGE", " ", " ", "To be registered"],
+            ["VARICELLA ZOSTER IMMUNOGLOBULIN 200 IU/2 ML INJECTION", " ", " ", "To be registered"],
+            ["VISMODEGIB", "150MG", "CAPSULE", "To be registered"],
+            ["VITAMIN B1 (THIAMINE HYDROCHLORIDE)", "100 MG/2 ML (2 ML) AMPOULE", "INJECTION", "To be registered"],
+            ["VITAMIN B6 (PYRIDOXINE)", "50 MG/ML (2 ML)", "INJECTION", "To be registered"],
+            ["YELLOW FEVER VACCINE STABILIZED FREEZE DRIED ATTENUATED VACCINE", " ", "INJECTION", "To be registered"],
+            ["ZINC CHLORIDE", "1 MG/ML", "INJECTION", "To be registered"],
+            ["ZINC GLUCONATE", "1 MG/ML (10ML) VIAL", "INJECTION", "To be registered"],
+            ["ZINC SULPHATE", "1 MG/ML", "INJECTION", "To be registered"],
+            ["ZINC SULPHATE", "22.5MG/25MG", "ELEMENTAL TAB", "To be registered"],
+            ["ZINC SULPHATE", "5MG/ML (5ML) VIAL", "CONCENTRATED SOLUTION FOR INJ", "To be registered"],
+            ["ZINC TRISODIUM PENTETATE", " ", " ", "To be registered"],
+            ["ZONISAMIDE", "100MG", "CAPSULE", "To be registered"],
+            ["ABACAVIR 600 MG + DOLUTEGRAVIR 50 MG + LAMIVUDINE 300 MG TABLET", " ", " ", "Additional alternative required"],
+            ["ACETAZOLAMIDE INJECTION 500 MG VIAL", " ", " ", "Additional alternative required"],
+            ["ACETIC ACID 2% SOLUTION", " ", " ", "Additional alternative required"],
+            ["ACETYLCYSTEINE 2 G/10 ML INJECTION: CONCENTRATED, 10 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["ACTIVATED CHARCOAL POWDER", " ", " ", "Additional alternative required"],
+            ["ACTIVATED CHARCOAL TABLET OR CAPSULE", " ", " ", "Additional alternative required"],
+            ["AFATINIB 40MG TABLET", " ", " ", "Additional alternative required"],
+            ["AGALSIDASE ALFA 1/MG/ML 3.5 ML VIAL", " ", " ", "Additional alternative required"],
+            ["AGALSIDASE BETA 5 MG FOR INJECTION PARENTERAL 1 ML", " ", " ", "Additional alternative required"],
+            ["ALGLUCOSIDASE ALFA 50 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["ALTEPLASE 50 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["AMINO ACIDS 10%,ELECTROLYTES", " ", " ", "Additional alternative required"],
+            ["AMINO ACIDS 15%,ELECTROLYTES", " ", " ", "Additional alternative required"],
+            ["AMIODARONE HYDROCHLORIDE 150 MG/3 ML INJECTION: CONCENTRATED, 3 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["AMPHETAMINE SALT COMBINATION 10MG XR TABLET", " ", " ", "Additional alternative required"],
+            ["AMPHOTERICIN B (AS LIPOSOMAL) 50 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["AMPHOTERICIN B 50 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["AMPICILLIN SODIUM/SULBACTAM SODIUM INJECTION VIAL 1.5 G", " ", " ", "Additional alternative required"],
+            ["ANAKINRA 100 MG/0.67 ML INJECTION SYRINGE", " ", " ", "Additional alternative required"],
+            ["ANTHRAX IMMUNE GLOBULIN 60 IU INJECTION 50ML VIAL", " ", " ", "Additional alternative required"],
+            ["ANTHRAX VACCINE", " ", " ", "Additional alternative required"],
+            ["ANTIHEMOPHILIC 500IU TO 1000IU/WILLEBRAND 500 IU TO 1000IU", " ", " ", "Additional alternative required"],
+            ["ANTIHEMOPHILIC COAGULATION FACTOR VIIA (RECOMBINANT) 1 MG VIAL", " ", " ", "Additional alternative required"],
+            ["ANTIHEMOPHILIC COAGULATION FACTOR VIIA (RECOMBINANT) 2 MG VIAL", " ", " ", "Additional alternative required"],
+            ["ANTIHEMOPHILIC COAGULATION FACTOR VIIA (RECOMBINANT) 5 MG VIAL", " ", " ", "Additional alternative required"],
+            ["ANTIHEMOPHILIC FACTOR IX (RECOMBINANT LONG ACTING) POWDER FOR SOLINJECTION 250 IU VIAL", " ", " ", "Additional alternative required"],
+            ["ANTIHEMOPHILIC FACTOR VIII (RECOMBINANT,LONG ACTING) POWDER FOR SOL INJ. 1000 IU VIAL.", " ", " ", "Additional alternative required"],
+            ["ANTIHEMOPHILIC FACTOR VIII (RECOMBINANT,LONG ACTING) POWDER FOR SOL INJ. 500 IU VIAL.", " ", " ", "Additional alternative required"],
+            ["ANTI-INHIBITOR COAGULANT COMPLEX, 500 U", " ", " ", "Additional alternative required"],
+            ["ANTITHROMBIN III CONCENTRATE 500U INJECTION", " ", " ", "Additional alternative required"],
+            ["ARIPIPRAZOLE 400 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["ARTEMETHER 20 MG/ML INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["ASPARAGINASE (ERWINIA) POWDER FOR INJECTION 10000 U/VIAL", " ", " ", "Additional alternative required"],
+            ["ATEZOLIZUMAB 60 MG/ML SOLUTION FOR INFUSION (20ML) VIAL", " ", " ", "Additional alternative required"],
+            ["ATROPINE + PRALIDOXIME CHLORIDE AUTOJECTOR PARENTERAL", " ", " ", "Additional alternative required"],
+            ["ATROPINE SULFATE 1 MG/10 ML INJECTION, 10 ML SYRINGE", " ", " ", "Additional alternative required"],
+            ["ATROPINE SULFATE 2 MG AUTOINJECTOR", " ", " ", "Additional alternative required"],
+            ["ATROPINE SULFATE 500 MICROGRAM/5 ML INJECTION, 5 ML SYRINGE", " ", " ", "Additional alternative required"],
+            ["AZATHIOPRINE 50 MG TABLET", " ", " ", "Additional alternative required"],
+            ["AZATHIOPRINE 50MG INJ", " ", " ", "Additional alternative required"],
+            ["BASILIXIMAB 20 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["BCG VACCINE HEAT STABLE FREEZE DRIED BCG VACCINE PREPARED FROM A STRAIN DERIVED FROM THE BACILLUS CALMETTE AND GUERIN MULTIDOSE (10- 20 DOSES )", " ", " ", "Additional alternative required"],
+            ["BEDAQUILINE 100 MG TABLET", " ", " ", "Additional alternative required"],
+            ["BENRALIZUMAB SC INJECTION PREFILLED SYRINGE 30MG/ML", " ", " ", "Additional alternative required"],
+            ["BENZATROPINE MESILATE 2 MG/2 ML INJECTION, 2 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["BENZHEXOL HCL (TRIHEXYPHENIDYL) 2MG TABLET", " ", " ", "Additional alternative required"],
+            ["BENZHEXOL HCL (TRIHEXYPHENIDYL) 5MG TABLET", " ", " ", "Additional alternative required"],
+            ["BENZYLPENICILLIN 600 MG (1 MILLION INTERNATIONAL UNITS) INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["BERACTANT 200 MG/8 ML INTRATRACHEAL SUSPENSION, 8 ML VIAL", " ", " ", "Additional alternative required"],
+            ["BIVALIRUDIN 250 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["BLINATUMOMAB 35MCG INJECTION", " ", " ", "Additional alternative required"],
+            ["BRENTUXIMAB 50MG INJECTION", " ", " ", "Additional alternative required"],
+            ["BROMOCRIPTINE 2.5 MG TABLET", " ", " ", "Additional alternative required"],
+            ["BUROSUMAB-TWZA 20 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["BUROSUMAB-TWZA 30 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["CAFFEINE CITRATE 10 MG/ML INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["CALCIUM CHLORIDE DIHYDRATE 10% (1 G/10 ML, 6.8 MMOL/10 ML CALCIUM) INJECTION, 10 ML SYRINGE", " ", " ", "Additional alternative required"],
+            ["CALCIUM CHLORIDE DIHYDRATE 10% (1 G/10 ML, 6.8 MMOL/10 ML CALCIUM) INJECTION, 10 ML VIAL OR AMPOULE", " ", " ", "Additional alternative required"],
+            ["CALCIUM GLUCONATE 2.5% TOPICAL GEL", " ", " ", "Additional alternative required"],
+            ["CALCIUM GLUCONATE MONOHYDRATE 10% (1 G/10 ML, 2.2 MMOL/10 ML) INJECTION 10 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["CALCIUM POLYSTYRENE SULFONATE 999.3 MG/G POWDER", " ", " ", "Additional alternative required"],
+            ["CALFACTANT 35 MG/ML SUSPENSION", " ", " ", "Additional alternative required"],
+            ["CANAKINUMAB 150MG", " ", " ", "Additional alternative required"],
+            ["CARBETOCIN 100 MICROGRAM/ML INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["CARBIDOPA 5MG, LEVODOPA 20MG/ML 100ML INTESTINAL GEL", " ", " ", "Additional alternative required"],
+            ["CARBOPROST 250 MICROGRAM/ML INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["CARDIOPLEGIC SOLUTION 1000ML BOTTLE OR BAG", " ", " ", "Additional alternative required"],
+            ["CARGLUMIC ACID 100MG/ML (50 ML) ORAL SUSPENSION BOTTLE", " ", " ", "Additional alternative required"],
+            ["CEFTAZIDIME 2G, AVIBACTAM 0.5G INJECTION", " ", " ", "Additional alternative required"],
+            ["CEFTOLOZANE 1GM + TAZOBACTAM 0.5 GM VIAL", " ", " ", "Additional alternative required"],
+            ["CICLOSPORIN 100 MG/ML ORAL LIQUID", " ", " ", "Additional alternative required"],
+            ["CICLOSPORIN 250 MG/5 ML INJECTION: CONCENTRATED, 5 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["CLADRIBINE 10MG/10ML INJECTION (PRES.FREE)", " ", " ", "Additional alternative required"],
+            ["CLOBAZAM 2 MG/ ML ORAL SUSPENSION", " ", " ", "Additional alternative required"],
+            ["CORTICORELIN 100 MCG INJECTION", " ", " ", "Additional alternative required"],
+            ["CUSTODIOL HTK (HISTIDINE, TRYPOTOPHAN, KETOGLUTARATE) 1000 ML SOLUTION", " ", " ", "Additional alternative required"],
+            ["CYSTEAMINE 3.8MG/ML EYE DROPS", " ", " ", "Additional alternative required"],
+            ["DANTROLENE SODIUM 20 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["DARATUMUMAB 120 MG/ML SUBQ INJECTION, 15 ML PREFILLED SYRINGE", " ", " ", "Additional alternative required"],
+            ["DARUNAVIR 800 MG + COBICISTAT 150 MG TABLET", " ", " ", "Additional alternative required"],
+            ["DEFEROXAMINE MESILATE 500 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["DENOSUMAB 120 MG/1.7 ML INJECTION 1.7 ML VIAL", " ", " ", "Additional alternative required"],
+            ["DESFLURANE FOR INHALATION ANESTHETIC GAS 240ML/BOTTLE , THE REQUIRED DEVICES TO BE SUPPLIED FREE OF CHARGE WITH MAINTENANCE", " ", " ", "Additional alternative required"],
+            ["DEXTROSE 50% INTRAVENOUS INFUSION 50 ML VIAL", " ", " ", "Additional alternative required"],
+            ["DIAZEPAM 5 MG/ML INJECTION 2 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["DICOBALT EDETATE 15 MG/ML INJECTION 20 ML VIAL", " ", " ", "Additional alternative required"],
+            ["DIMERCAPROL 5% (100 MG/2 ML) INJECTION, 2 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["DOBUTAMINE 500 MG/250 ML + DEXTROSE 5% INJECTION: INTRAVENOUS INFUSION, 250 ML BAG", " ", " ", "Additional alternative required"],
+            ["DOLUTEGRAVIR 50 MG TABLET", " ", " ", "Additional alternative required"],
+            ["DORNASE ALPHA SOLUTION FOR NEB 1MG/ML ( 2.5MG/2.5ML) AMPOULE", " ", " ", "Additional alternative required"],
+            ["DOXAPRAM HCL INJECTION 20MG/ML", " ", " ", "Additional alternative required"],
+            ["DOXYCYCLINE HYCLATE 100MG INJECTION", " ", " ", "Additional alternative required"],
+            ["ELOSULFASE ALFA 5 MG/5 ML INJECTION: CONCENTRATED, 5 ML VIAL", " ", " ", "Additional alternative required"],
+            ["EMICIZUMAB SOLUTION FOR INFUSION SINGLE DOSE VIAL  150MG/ML", " ", " ", "Additional alternative required"],
+            ["EMICIZUMAB SOLUTION FOR INFUSION SINGLE DOSE VIAL  60MG/0.4 ML", " ", " ", "Additional alternative required"],
+            ["EMICIZUMAB SOLUTION FOR INFUSION SINGLE DOSE VIAL 105MG/0.7 ML", " ", " ", "Additional alternative required"],
+            ["EMICIZUMAB SOLUTION FOR INFUSION SINGLE DOSE VIAL 30MG/ML", " ", " ", "Additional alternative required"],
+            ["EMTRICITABINE 200 MG + TENOFOVIR ALAFENAMIDE 25 MG TABLET", " ", " ", "Additional alternative required"],
+            ["EPINEPHRINE (ADRENALINE) 1 IN 10 000 (1 MG/10 ML) INJECTION, 10 ML SYRINGE", " ", " ", "Additional alternative required"],
+            ["EPINEPHRINE (ADRENALINE) 1 IN 1000 (150 MICROGRAM/0.15 ML) INJECTION, 0.15 ML PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["EPINEPHRINE (ADRENALINE) 1 IN 1000 (300 MICROGRAM/0.3 ML) INJECTION, 0.3 ML PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["ERIBULIN 1MG/2ML IV INJECTION", " ", " ", "Additional alternative required"],
+            ["ESKETAMINE  28 MG", " ", " ", "Additional alternative required"],
+            ["ESTROGEN CONJUGATED 25MG /IV", " ", " ", "Additional alternative required"],
+            ["ETHAMBUTOL HYDROCHLORIDE 400 MG TABLET", " ", " ", "Additional alternative required"],
+            ["ETHYL ALCOHOL (DEHYDRATED ALCOHOL) ABSOLUTE INJECTION", " ", " ", "Additional alternative required"],
+            ["EVOLOCUMAB 140MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["FACTOR XIII CONCENTRATE (HUMAN) 1250 IU POWDER FOR INJECTION PARENTERAL20ML", " ", " ", "Additional alternative required"],
+            ["FAT EMULSION 20% SOY BEAN, MEDIUM CHAIN TRIGLYCERIDES, OLIVE OIL, FISH OIL 500ML BOTTLE", " ", " ", "Additional alternative required"],
+            ["FIBRIN SEALANT DISPOSABLE KIT 2ML", " ", " ", "Additional alternative required"],
+            ["FLUDARABINE PHOSPHATE 50 MG/2 ML INJECTION: CONCENTRATED, 2 ML VIAL", " ", " ", "Additional alternative required"],
+            ["FOMEPIZOLE 1.5 G/1.5 ML INJECTION: INTRAVENOUS INFUSION, 1.5 ML VIAL", " ", " ", "Additional alternative required"],
+            ["GABAPENTIN 50 MG/ML SOLUTION", " ", " ", "Additional alternative required"],
+            ["GALSULFASE 5 MG/5 ML INJECTION: CONCENTRATED, 5 ML VIAL", " ", " ", "Additional alternative required"],
+            ["GANCICLOVIR 500 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["GENTAMICIN 20 MG/2 ML INJECTION 2 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["GENTAMICIN 80 MG/2 ML INJECTION, 2 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["GLUCAGON HYDROCHLORIDE 1 MG INJECTION: POWDER FOR, VIAL + DILUENT SYRINGE", " ", " ", "Additional alternative required"],
+            ["GLUCARPIDASE 1000 UNITS POWDER FOR SOLUTION FOR INJECTION", " ", " ", "Additional alternative required"],
+            ["GLUTAMINE ALANINE 20G/100ML BOTTLE", " ", " ", "Additional alternative required"],
+            ["GONADORELIN 100 MICROGRAM INJECTION: POWDER FOR, VIAL + DILUENT", " ", " ", "Additional alternative required"],
+            ["GOSERELIN 10.8MG INJECTION", " ", " ", "Additional alternative required"],
+            ["GOSERELIN 3.6 MG IMPLANT, 3.6 MG SYRINGE", " ", " ", "Additional alternative required"],
+            ["HALOPERIDOL (AS DECANOATE) 50 MG/ML INJECTION: MODIFIED RELEASE, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["HALOPERIDOL 5 MG/ML INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["HEPATITIS A VACCINE FOR CHILDREN SINGLE DOSE", " ", " ", "Additional alternative required"],
+            ["HEPATITIS A VACCINES FOR ADULTS AND ADOLESCENT SINGLE DOSE VIAL OR PREFILLED SYRINGE", " ", " ", "Additional alternative required"],
+            ["HEPATITIS B IMMUNOGLOBULIN 200 IU TO 250 IU INJECTION", " ", " ", "Additional alternative required"],
+            ["HEPTAVALENT BOTULINUM ANTITOXIN 20 ML VIAL", " ", " ", "Additional alternative required"],
+            ["HUMAN FIBRINOGEN 2 G INFUSION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["HYALURONIDASE 1 500 INTERNATIONAL UNITS INJECTION: POWDER FOR, AMPOULE", " ", " ", "Additional alternative required"],
+            ["HYDROMORPHONE 1MG/ML ORAL SOLUTION 450 TO 500ML BOTTLE", " ", " ", "Additional alternative required"],
+            ["HYDROXOCOBALAMIN (VITAMIN B12) 1000 MICROGRAM/ ML INJECTION, 30 ML VIAL", " ", " ", "Additional alternative required"],
+            ["HYDROXYCARBAMIDE 100MG/ML (150ML) SUSPENSION", " ", " ", "Additional alternative required"],
+            ["IBUPROFEN LYSINE 10 MG/ML SOLUTION FOR INJECTION, 2 ML USED FOR PATENT DUCTUS ARTERIOSUS FOR PEDIATRIC", " ", " ", "Additional alternative required"],
+            ["IDARUBICIN 10MG INJECTION", " ", " ", "Additional alternative required"],
+            ["IDURSULFASE 6 MG/3 ML INJECTION: CONCENTRATED, 3 ML VIAL", " ", " ", "Additional alternative required"],
+            ["IG DIGOXIN IMMUNE FAB (ANTIDIGOXIN FAB FRAGMENTS) FOR INJECTION 40 MG/VIAL", " ", " ", "Additional alternative required"],
+            ["IG IMMUNOGLOBULIN ANTI HUMAN T-LYMPHOCYTE IMMUNOGLOBULIN (ATG) (RABBIT) 25 MG INJECTION (THYMOGLOBULIN)/ ANTI- THYMOGLOBULIN FOR INJ ECTION", " ", " ", "Additional alternative required"],
+            ["IG IMMUNOGLOBULIN ANTI-RHO (D) INJECTION (200-300 MCG)", " ", " ", "Additional alternative required"],
+            ["IG IMMUNOGLOBULIN HUMAN NORMAL 5 % IV INJECTION 2.5 GM/50 ML VIAL", " ", " ", "Additional alternative required"],
+            ["INACTIVATED POLIO VACCINE (IPV) 0.5 ML INJECTION", " ", " ", "Additional alternative required"],
+            ["INSULIN ASPART 30 INTERNATIONAL UNITS/ML + INSULIN ASPART PROTAMINE 70 INTERNATIONAL UNITS/ML INJECTION, 3 ML PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["INSULIN GLARGINE 300 INTERNATIONAL UNITS/ML INJECTION, 1.5 ML PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["INSULIN GLULISINE 100 INTERNATIONAL UNITS/ML INJECTION, 3 ML PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["INSULIN HUMAN NPH ISOPHANE 100/ML PENFILL - 15 NEEDLES FREE FOR EACH PEN ( FREE PEN FOR EVERY 25 TO 50 CARTRIDGES)", " ", " ", "Additional alternative required"],
+            ["INSULIN HUMAN REGULAR 100 UNITS/ML PENFILL INJECTION CARTRIDGE - 15 NEEDLES FREE FOR EACH PEN ( FREE PEN FOR EVERY 25 TO 50 CARTRIDG ES)", " ", " ", "Additional alternative required"],
+            ["INSULIN LISPRO 25 INTERNATIONAL UNITS/ML + INSULIN LISPRO PROTAMINE 75 INTERNATIONAL UNITS/ML INJECTION, 3 ML PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["INSULIN LISPRO 50 INTERNATIONAL UNITS/ML + INSULIN LISPRO PROTAMINE 50 INTERNATIONAL UNITS/ML INJECTION, 3 ML PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["INSULIN NEUTRAL HUMAN 30 INTERNATIONAL UNITS/ML + INSULIN ISOPHANE HUMAN 70 INTERNATIONAL UNITS/ML INJECTION, 10 ML VIAL", " ", " ", "Additional alternative required"],
+            ["INSULINE DEGLUDEC 100UNIT/ML INJECTION PEN", " ", " ", "Additional alternative required"],
+            ["ISAVUCONAZONIUM SULFATE 186.3MG (ISAVUCONAZOLE 100MG) CAPSULE", " ", " ", "Additional alternative required"],
+            ["ISOLEUCINE 50 MG POWDER ORAL", " ", " ", "Additional alternative required"],
+            ["ISONIAZID 100 MG TABLET", " ", " ", "Additional alternative required"],
+            ["ISOPRENALINE HYDROCHLORIDE 1 IN 5000 (200 MICROGRAM/ML) INJECTION: CONCENTRATED, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["IXAZOMIB 3 MG CAPSULE ORAL", " ", " ", "Additional alternative required"],
+            ["IXEKIZUMAB 80 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["LAMIVUDINE 50 MG/5ML SYRUP ORAL", " ", " ", "Additional alternative required"],
+            ["LAPATINIB 250 MG TABLET", " ", " ", "Additional alternative required"],
+            ["LARONIDASE 2.9 MG/5 ML INJECTION: INTRAVENOUS INFUSION, 5 ML VIAL", " ", " ", "Additional alternative required"],
+            ["L-CARNITINE 200 MG/ML INJECTION SOLUTION (5-12.5 ML)", " ", " ", "Additional alternative required"],
+            ["L-CARNITINE 300 MG/ML ORAL SOLUTION (20 ML)", " ", " ", "Additional alternative required"],
+            ["LEUPRORELIN ACETATE 3.75 MG INJECTION: MODIFIED RELEASE, SYRINGE", " ", " ", "Additional alternative required"],
+            ["LEUPRORELIN ACETATE 7.5 MG FOR INJECTION PARENTERAL MODIFIED RELEASE", " ", " ", "Additional alternative required"],
+            ["LITHIUM CARBONATE 300 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["LOMITAPIDE 10 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["LOMITAPIDE 20 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["LOMITAPIDE 5 MG CAPSULE ORAL", " ", " ", "Additional alternative required"],
+            ["LOPINAVIR 100 MG + RITONAVIR 25 MG TABLET", " ", " ", "Additional alternative required"],
+            ["LORAZEPAM 2 MG/ ML 1ML (AMPOULE/VIAL)", " ", " ", "Additional alternative required"],
+            ["MAGNESIUM SULPHATE 50% INJECTION, 5 ML TO 10 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["MAPROTILINE HYDROCHloride 25 MG TABLET", " ", " ", "Additional alternative required"],
+            ["MECASERMIN 40MG INJECTION", " ", " ", "Additional alternative required"],
+            ["MEFLOQUINE 250 MG TABLET", " ", " ", "Additional alternative required"],
+            ["MEGESTROL ACETATE 160MG TAB", " ", " ", "Additional alternative required"],
+            ["MEGESTROL ACETATE, 40MG, SCORED TABLET, ORAL", " ", " ", "Additional alternative required"],
+            ["MELPHALAN 50 MG INJECTION", " ", " ", "Additional alternative required"],
+            ["MESNA 400 MG/4 ML INJECTION: CONCENTRATED, 4 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["METHADONE 10MG TABLET", " ", " ", "Additional alternative required"],
+            ["METHYLTHIONINIUM CHLORIDE 1% (10 MG/ML) INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["MILRINONE 1MG/ML 10ML VIAL OR AMP", " ", " ", "Additional alternative required"],
+            ["MORPHINE SULPHATE 10MG IMMEDIATE RELEASE TABLET", " ", " ", "Additional alternative required"],
+            ["MORPHINE SULPHATE 10MG SUSTAINED RELEASE TABLET", " ", " ", "Additional alternative required"],
+            ["MORPHINE SULPHATE 10MG/5ML ORAL SOLUTION 100ML BOTTLE", " ", " ", "Additional alternative required"],
+            ["MORPHINE SULPHATE 30 MG SUSTAINED RELEASE TABLET", " ", " ", "Additional alternative required"],
+            ["MORPHINE SULPHATE INJECTION 10MG/ML", " ", " ", "Additional alternative required"],
+            ["MULTIPLE ELECTROLYTES INJECTION 1000 ML PLASMALYTE", " ", " ", "Additional alternative required"],
+            ["MULTIVITAMIN INJECTION FOR PEDIATRICS WITHOUT VITAMIN K 10ML", " ", " ", "Additional alternative required"],
+            ["MULTIVITAMINS (LIPID AND WATER SOLUBLE) FOR ADULT INJECTION FOR TPN", " ", " ", "Additional alternative required"],
+            ["MULTIVITAMINS (LIPID SOLUBLE) FOR PEDIATRIC 10 ML FOR TPN", " ", " ", "Additional alternative required"],
+            ["MULTIVITAMINS (WATER SOLUBLE) FOR PEDIATRIC 10 ML FOR TPN", " ", " ", "Additional alternative required"],
+            ["NALOXONE HYDROCHLORIDE 40 MICROGRAM/2 ML INJECTION, 2 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["NALOXONE HYDROCHLORIDE 400 MICROGRAM/ML INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["NATALIZUMAB 300 MG/15 ML INJECTION: CONCENTRATED, 15 ML VIAL", " ", " ", "Additional alternative required"],
+            ["NITISINONE 2MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["NITISINONE 4 MG/ML SUSPENSION 90 ML", " ", " ", "Additional alternative required"],
+            ["NITISINONE 5MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["NITISINONE CAP 10MG", " ", " ", "Additional alternative required"],
+            ["NITROGLYCERIN TRANSDERMAL PATCHES (10 MG / 24 HOURS)", " ", " ", "Additional alternative required"],
+            ["NIVOLUMAB 100MG/10 ML INJ", " ", " ", "Additional alternative required"],
+            ["NUSINERSEN 12MG/5ML VIAL", " ", " ", "Additional alternative required"],
+            ["OCRELIZUMAB 300MG/10ML", " ", " ", "Additional alternative required"],
+            ["OCTREOTIDE LAR-DEPOT INJ 30MG", " ", " ", "Additional alternative required"],
+            ["OLANZAPINE 10 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["ONASEMNOGENE ABEPARVOVEC 2 X10 EXP 13 VECTOR GENOMES/ML SOLUTION FOR INJECTION", " ", " ", "Additional alternative required"],
+            ["ORAL REHYDRATION SALTS ORAL LIQUID: POWDER FOR, 20.5 G SACHET", " ", " ", "Additional alternative required"],
+            ["OXCARBAZEPINE 300 MG/5 ML SUSPENSION, ORAL", " ", " ", "Additional alternative required"],
+            ["PALIPERIDONE 150 MG/1.5 ML INJECTION: MODIFIED RELEASE, 1.5 ML SYRINGE", " ", " ", "Additional alternative required"],
+            ["PALIVIZUMAB 100 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["PANITUMUMAB 20MG/ML (5ML)", " ", " ", "Additional alternative required"],
+            ["PAPAVERINE HYDROCHLORIDE 300 MG/10 ML INJECTION, 10 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["PARICALCITOL 1 MICROGRAM CAPSULE", " ", " ", "Additional alternative required"],
+            ["PEGVALIASE 10MG/0.5ML PREFILLED SYRINGE", " ", " ", "Additional alternative required"],
+            ["PEGVALIASE PREFILLED SYRINGE 2.5MG/0.5ML", " ", " ", "Additional alternative required"],
+            ["PEGVALIASE PRE-FILLED SYRINGE 20MG/ML", " ", " ", "Additional alternative required"],
+            ["PEMBROLIZUMAB 25MG/ML (4ML) VIAL INJECTION", " ", " ", "Additional alternative required"],
+            ["PENICILLAMINE 250 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["PENTETATE CALCIUM TRISODIUM INJECTION 1000 MG CALCIUM DTPA", " ", " ", "Additional alternative required"],
+            ["PERTUZUMAB 420MG/14ML INJECTION", " ", " ", "Additional alternative required"],
+            ["PHENOBARBITAL 15 MG/5ML SYRUP 100 TO 200 ML", " ", " ", "Additional alternative required"],
+            ["PHENOBARBITAL SODIUM 10 MG TABLET", " ", " ", "Additional alternative required"],
+            ["PHENOBARBITAL SODIUM 200 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["PHENOBARBITAL SODIUM 60 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["PHENYLEPHRINE HYDROCHLORIDE 10 MG/ML INJECTION, 1 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["PHENYTOIN ORAL SUSP 25MG/ML (125MG/5ML) 237ML BTL", " ", " ", "Additional alternative required"],
+            ["PHENYTOIN SODIUM 100 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["PHENYTOIN SODIUM 250 MG/5 ML INJECTION, 5 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["PHENYTOIN SODIUM 50 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["PNEUMOCOCCAL 23-VAL P-SAC VAC INJECTION DISPOSABLE SYRINGE 25MCG/0.5ML PREFILLED SYRINGE", " ", " ", "Additional alternative required"],
+            ["PONATINIB 15 MG TABLET", " ", " ", "Additional alternative required"],
+            ["POTASSIUM CHLORIDE 1-3 MEQ/ML SYRUP", " ", " ", "Additional alternative required"],
+            ["POTASSIUM CHLORIDE 600 MG (8 MMOL POTASSIUM) TABLET: MODIFIED RELEASE", " ", " ", "Additional alternative required"],
+            ["POTASSIUM IODIDE 130 MG TABLET", " ", " ", "Additional alternative required"],
+            ["POTASSIUM IODIDE 65 MG TABLET", " ", " ", "Additional alternative required"],
+            ["POTASSIUM PHOSPHATE 2 MMOL/ML INJECTION 10 TO 20 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["PRALIDOXIME CHLORIDE 1 G INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["PRASUGREL 10 MG TABLET ORAL", " ", " ", "Additional alternative required"],
+            ["PROCAINAMIDE HCL 100 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["PROTAMINE SULFATE 50 MG/5 ML INJECTION, 5 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["PROTEIN C CONCENTRATE 500 I.U. IV VIAL", " ", " ", "Additional alternative required"],
+            ["PRUSSIAN BLUE INSOLUBLE 500 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["PYRAZINAMIDE 500 MG TABLET", " ", " ", "Additional alternative required"],
+            ["R DEFIBROTIDE 80MG/ML 2.5ML INJECTION", " ", " ", "Additional alternative required"],
+            ["RABIES VIRUS VACCINE NOT LESS THAN 2.5 IU SINGLE DOSE VIAL", " ", " ", "Additional alternative required"],
+            ["RALTEGRAVIR 600 MG TABLET", " ", " ", "Additional alternative required"],
+            ["RASBURICASE 1.5 MG INJECTION: POWDER FOR, VIAL + DILUENT", " ", " ", "Additional alternative required"],
+            ["RASBURICASE 7.5MG INJ", " ", " ", "Additional alternative required"],
+            ["RETEPLASE 10 UNITS (17.4 MG) INJECTION: POWDER FOR, VIAL + DILUENT", " ", " ", "Additional alternative required"],
+            ["RIFAPENTINE 150MG TABLET", " ", " ", "Additional alternative required"],
+            ["RISDIPLAM 60MG/80ML ORAL SOLUTION", " ", " ", "Additional alternative required"],
+            ["RISPERIDONE 50 MG INJECTION: MODIFIED RELEASE, VIAL + DILUENT SYRINGE", " ", " ", "Additional alternative required"],
+            ["ROMIPLOSTIM 250MCG INJECTION", " ", " ", "Additional alternative required"],
+            ["ROMOSOZUMAB-AQQG 105MG/1.17ML VIAL", " ", " ", "Additional alternative required"],
+            ["ROTAVIRUS VACCINE ( ORAL DROPS )", " ", " ", "Additional alternative required"],
+            ["RUBELLA VACCINE", " ", " ", "Additional alternative required"],
+            ["SEMAGLUTIDE 2 MG/ 1.5 ML SOLUTION FOR INJECTION 0.5 MG PREFILLED PEN", " ", " ", "Additional alternative required"],
+            ["SEMAGLUTIDE 4 MG/ 3ML 1 MG SOLUTION FOR INJECTION IN PRE-FILLED PEN", " ", " ", "Additional alternative required"],
+            ["SIROLIMUS 1 MG TABLET", " ", " ", "Additional alternative required"],
+            ["SMALLPOX VACCINE (JYNNEOS)", " ", " ", "Additional alternative required"],
+            ["SODIUM BICARBONATE 4.2% [0.5MMOL/1ML] 10 ML SYRINGE", " ", " ", "Additional alternative required"],
+            ["SODIUM BICARBONATE 5% INTRAVENOUS INFUSION 250 ML BOTTLE", " ", " ", "Additional alternative required"],
+            ["SODIUM BICARBONATE 8.4% INJECTION 50 ML VIAL", " ", " ", "Additional alternative required"],
+            ["SODIUM PHENYL ACETATE 10 % + SODIUM BENZOATE 10 % PER AMPOULE", " ", " ", "Additional alternative required"],
+            ["SODIUM PHENYLBUTYRATE 250 MG/ML ORAL LIQUID", " ", " ", "Additional alternative required"],
+            ["SODIUM POLYSTYRENE SULFONATE POWDER", " ", " ", "Additional alternative required"],
+            ["SODIUM THIOSULFATE 12.5G VIAL 50ML INJECTION", " ", " ", "Additional alternative required"],
+            ["STREPTOKINASE 250 000 INTERNATIONAL UNITS INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["STREPTOMYCIN SULFATE 1 G INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["SUCCIMER 100 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["SULFAMETHOXAZOLE 266.7 MG/3 ML + TRIMETHOPRIM 53.3 MG/3 ML INJECTION: CONCENTRATED, 3 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["TENOFOVIR ALAFENAMIDE 25MG TABLET", " ", " ", "Additional alternative required"],
+            ["TETANUS IMMUNOGLOBULIN, HUMAN 250 INTERNATIONAL UNITS INJECTION, VIAL", " ", " ", "Additional alternative required"],
+            ["TETANUS TOXOID 10 LF/0.5 ML INJECTION, 0.5 ML AMPOULE", " ", " ", "Additional alternative required"],
+            ["TETANUS TOXOID VACCINE 1500 INTERNATIONAL UNITS/1ML", " ", " ", "Additional alternative required"],
+            ["THALIDOMIDE 100 MG TABLET", " ", " ", "Additional alternative required"],
+            ["THALIDOMIDE 50MG TABLET", " ", " ", "Additional alternative required"],
+            ["THYROTROPIN ALFA 0.9 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["TIROFIBAN 12.5 MG/50 ML INJECTION: CONCENTRATED, 50 ML VIAL", " ", " ", "Additional alternative required"],
+            ["TOPIRAMATE SPRINKLE 15 MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["TOPOTECAN HCL 4MG INJECTION", " ", " ", "Additional alternative required"],
+            ["TRACE ELEMENT FOR PEDIATRICS FOR TPN USE 5ML VIAL CONTAIN: 4-7 TRACE ELEMENTS", " ", " ", "Additional alternative required"],
+            ["TRASTUZUMAB EMTANSINE 100MG INJECTION", " ", " ", "Additional alternative required"],
+            ["TRIPTORELIN 3.75MG PREFILLED SYRINGE", " ", " ", "Additional alternative required"],
+            ["TYPHOID VACCINE A PARENTERAL CAPSULAR POLYSACCHARIDE VACCINE CONTAINING 25 MCG. OF THE(VI) POLYSACCHARIDE ANTIGEN", " ", " ", "Additional alternative required"],
+            ["VACCINE IMMUNOGLOBULIN SMALLPOX 50000 IU 15 ML VIAL", " ", " ", "Additional alternative required"],
+            ["VACCINE: DIPHERIA, TETANUS, ACELLULAR PERTUSSIS (DTAP), HEPATITIS B, ENHANCED INACTIVATED POLIO (IPV)&HAEMOPHILUS INFLUENZA TYPE B V ACCINE (HIB) SINGLE DOSE 0.5ML VIAL. DIPHERIA NOT LESS THAN 30IU/DOSES, TETANUS NOT LESS THAN 40IU/DOSES, PERTUSSIS NOT LE", " ", " ", "Additional alternative required"],
+            ["VACCINE: DIPHTHERIA, TETANUS ,ACELLULAR PERTUSSIS (TDAP), ADOLESCENT AND ADULT SINGLE DOSE 0.5ML PREFILLED SYRINGE", " ", " ", "Additional alternative required"],
+            ["VACCINE: HEPATITIS B VACCINE ( FOR ADOLESCENT AND ADULTS ) A STERILE SUSPENSION OF PURIFIED INACTIVATED HEPATITIS B SURFACE ANTIGEN, PROTEIN PRODUCED BY DNA TECHNIQUE ,THE VACCINE IS FOR I.M. OR S.C. INJECTIONS UNIT PACK: SINGLE DOSE / VIAL STORAGE: 2 - 8", " ", " ", "Additional alternative required"],
+            ["VACCINE: HEPATITIS B VACCINE ( FOR CHILDREN ) A STERILE SUSPension OF PURIFIED INACTIVATED HEPATITIS B SURFACE ANTIGEN, PROTEIN PRODUCED BY A RECOMBINANT DNA TECHNIQUE,THIOMERSAL FREE OR CONTAIN GREATLY REDUCED AMOUNTS LESS THAN 0.5 MCG OF MERCURY/DOSE ,T", " ", " ", "Additional alternative required"],
+            ["VALPROATE SODIUM 400 MG INJECTION: POWDER FOR, VIAL", " ", " ", "Additional alternative required"],
+            ["VARICELLA ZOSTER IMMUNOGLOBULIN 500 IU/20 ML INJECTION", " ", " ", "Additional alternative required"],
+            ["VARICELLA ZOSTER VIRUS (CHICKEN POX VACCINE) FOR SUBCUTANEOUS INJECTION LIVE ATTENUATED VARICELLA VIRUS VACCINE", " ", " ", "Additional alternative required"],
+            ["VEMURAFENIB 240MG TABLET", " ", " ", "Additional alternative required"],
+            ["VINBLASTINE SULPHATE INJECTION 10MG/VIAL POWDER FOR RECONSTITUTION", " ", " ", "Additional alternative required"],
+            ["VINCRISTINE 2MG INJECTION", " ", " ", "Additional alternative required"],
+            ["VINCRISTINE SULFATE 1 MG/ML INJECTION, 1 ML VIAL", " ", " ", "Additional alternative required"],
+            ["VINORELBINE 50 MG/5 ML INJECTION: CONCENTRATED, 5 ML VIAL", " ", " ", "Additional alternative required"],
+            ["VITAMIN B6 (PYRIDOXINE) 100 MG/ML INJECTION", " ", " ", "Additional alternative required"],
+            ["VITAMIN B6 (PYRIDOXINE) 50 MG/ML 2 ML INJECTION", " ", " ", "Additional alternative required"],
+            ["WARFARIN SODIUM 1 MG TABLET", " ", " ", "Additional alternative required"],
+            ["WARFARIN SODIUM 2 MG TABLET", " ", " ", "Additional alternative required"],
+            ["ZINC GLUCONATE 1 MG/ML 10ML VIAL", " ", " ", "Additional alternative required"],
+            ["ZONISAMIDE 100MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["ZONISAMIDE 50MG CAPSULE", " ", " ", "Additional alternative required"],
+            ["Fluorouracil 0.5% (5 mg/g) Cream", " ", " ", "To be registered"],
+            ["NIROGACESTAT 50mg Tablet (Ogsiveo)", " ", " ", " "]
+        ];
+        
+        // Function to populate the table with data
+        function populateTable() {
+            const tableBody = document.querySelector("#medicationTable tbody");
+            tableBody.innerHTML = ''; // Clear existing rows
+            data.forEach(rowData => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${rowData[0]}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${rowData[1]}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${rowData[2]}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${rowData[3]}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function filterTable() {
+            // Get filter values
+            const nameFilter = document.getElementById('nameSearch').value.toUpperCase();
+            const strengthFilter = document.getElementById('strengthSearch').value.toUpperCase();
+            const dosageFilter = document.getElementById('dosageSearch').value.toUpperCase();
+            const reasonFilter = document.getElementById('reasonFilter').value.toUpperCase();
+
+            // Get table rows
+            const table = document.getElementById("medicationTable");
+            const tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (let i = 1; i < tr.length; i++) { // Start from 1 to skip the header row
+                const tds = tr[i].getElementsByTagName("td");
+                
+                const nameTd = tds[0];
+                const strengthTd = tds[1];
+                const dosageTd = tds[2];
+                const reasonTd = tds[3];
+
+                if (nameTd && strengthTd && dosageTd && reasonTd) {
+                    const nameText = nameTd.textContent || nameTd.innerText;
+                    const strengthText = strengthTd.textContent || strengthTd.innerText;
+                    const dosageText = dosageTd.textContent || dosageTd.innerText;
+                    const reasonText = reasonTd.textContent || reasonTd.innerText;
+
+                    // Match conditions
+                    const nameMatch = nameText.toUpperCase().indexOf(nameFilter) > -1;
+                    const strengthMatch = strengthText.toUpperCase().indexOf(strengthFilter) > -1;
+                    const dosageMatch = dosageText.toUpperCase().indexOf(dosageFilter) > -1;
+                    
+                    let reasonMatch = true;
+                    if (reasonFilter) {
+                        if (reasonFilter === "N/A") {
+                            reasonMatch = reasonText.trim() === '';
+                        } else {
+                            reasonMatch = reasonText.toUpperCase().indexOf(reasonFilter) > -1;
+                        }
+                    }
+
+                    if (nameMatch && strengthMatch && dosageMatch && reasonMatch) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        
+        // Initial population of the table when the page loads
+        document.addEventListener('DOMContentLoaded', populateTable);
+
+    </script>
+
+</body>
+</html>
